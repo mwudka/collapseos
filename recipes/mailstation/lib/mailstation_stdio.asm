@@ -402,7 +402,7 @@ ScrollCharLCD_2:
 ; _getchar
 ;
 ; Parameters: none
-; Returns: ASCII character code in 'l' register
+; Returns: ASCII character code in 'a' register
 ;
 ; Waits for a scancode using the Mailstation firmware's getkeycodefrombuffer
 ; function (0x0A9A), then uses the two conversion tables at 'scancode_table'
@@ -411,6 +411,12 @@ ScrollCharLCD_2:
 ;
 ;------------------------------------------------------------------------------
 _getchar:
+	push	bc
+	push	de
+	push	hl
+	push	ix
+	push	iy
+	
 keyagain:
 	; wait till a key is available
 	ld	de, mycharbuffer
@@ -465,6 +471,11 @@ print_scan_char:
 	;ld	l, a
 	;ret
 print_ascii_char:
+	pop	iy
+	pop	ix
+	pop	hl
+	pop	de
+	pop	bc
 	ret
 
 

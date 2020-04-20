@@ -1,5 +1,5 @@
-.equ	RAMSTART	0xA000
-.equ	RAMEND		0xC000
+.equ	RAMSTART	0x9C00
+.equ	RAMEND		0xBFFF
 
 .equ getkeycodefrombuffer 0x0A9A
 
