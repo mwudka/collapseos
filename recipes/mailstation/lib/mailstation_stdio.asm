@@ -314,16 +314,16 @@ _scrollscreen:
 	push	de
 	push	hl
 
-	; ld	hl, _textmodebuffer + 40	; copy all lines up by one
-	; ld	de, _textmodebuffer
-	; ld	bc, 600			; only 600 chars, since skipping top row
-	; ldir
-	; xor	a				; clear bottom row
-; 	ld	(_textmodebuffer + 0d600), a
-; 	ld	hl, #_textmodebuffer + #0d600
-; 	ld	de, #_textmodebuffer + #0d601
-	; ld	bc, 39
-	; ldir
+	ld	hl, _textmodebuffer+40	; copy all lines up by one
+	ld	de, _textmodebuffer
+	ld	bc, 600			; only 600 chars, since skipping top row
+	ldir
+	xor	a				; clear bottom row
+ 	ld	(_textmodebuffer+600), a
+ 	ld	hl, _textmodebuffer+600
+ 	ld	de, _textmodebuffer+601
+	ld	bc, 39
+	ldir
 
 	;call _UpdateCharLCD			; This is slow, so we don't do it anymore
 	;jr	_scrollscreen_end
