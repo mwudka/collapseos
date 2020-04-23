@@ -5,15 +5,6 @@ mailstation_stdio_init:
 	ld	(_cursorx), a
 	ld	(_cursory), a
 
-	ld	hl, cgafont_dataarea	; find aligned address
-	inc	h
-	ld	l, 0
-	ld	(_cgafont_addr), hl
-	ex	de, hl			; copy font data
-	ld	hl, cgafont_data
-	ld	bc, 2048
-	ldir
-
 	ret
 ;-----------------------------------------------------------------------------
 ; ClearLCD_Half
@@ -242,8 +233,7 @@ printchar_out:
 	add	iy, bc			; iy = #4038 + (cursory * 8) = lcd address to put character
 
 	ld	a, (ix)			; retrieve character again
-	;ld	hl, #cgafont
-	ld	hl, (_cgafont_addr) ; load font base address
+	ld	hl, cgafont_data ; load font base address
 	ld	l, a
 
 	ld	b, 8
@@ -475,8 +465,8 @@ print_ascii_char:
 
 
 
-cgafont_dataarea:
-	.fill 256*2 ; padding bytes
+; Add padding to ensure the font data is aligned on a 256 byte boundary
+.fill 256-$%256
 cgafont_data:
 	.db 0x00, 0x7e, 0x7e, 0x36, 0x08, 0x1c, 0x08, 0x00
 	.db 0xff, 0x00, 0xff, 0xf0, 0x3c, 0xfc, 0xfe, 0x18
@@ -759,9 +749,6 @@ _cursory:			; Cursor Y position
 	.dw	0
 _textmodebuffer:		; Text screen buffer
 	.fill 640*2
-_cgafont_addr:			; Pointer to CGA font data (after it's moved at init)
-	.dw 0		; You could change this data via C using this
-				; pointer for a dynamic font or graphics tiles.
 mycharbuffer:				; Scancode buffer for _getchar
 	.dw	0
 scancode_table:
